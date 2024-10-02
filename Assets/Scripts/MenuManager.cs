@@ -42,6 +42,11 @@ public class MenuManager : MonoBehaviour
             SetHihgscoreUsername(MenuManager.Instance.highscoreUsername);
             SetHighscore(MenuManager.Instance.highscore);
         }
+        MenuUIHandler menuUIHandler = FindObjectOfType<MenuUIHandler>();
+        if (menuUIHandler != null)
+        {
+            menuUIHandler.SetHighscoreText(highscoreUsername, highscore);
+        }
     }
 
     [System.Serializable]
