@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
+using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
 {
@@ -18,6 +20,9 @@ public class MenuManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        LoadHighscoreUsername();
+        LoadHighscore();
     }
 
     public void SetHihgscoreUsername(String hsUsername)
@@ -36,6 +41,57 @@ public class MenuManager : MonoBehaviour
         {
             SetHihgscoreUsername(MenuManager.Instance.highscoreUsername);
             SetHighscore(MenuManager.Instance.highscore);
+        }
+    }
+
+    [System.Serializable]
+    class SaveData
+    {
+        public String highscoreUsername;
+        public int highscore;
+    }
+
+    public void SaveHighscoreUsername()
+    {
+        SaveData data = new SaveData();
+        data.highscoreUsername = highscoreUsername;
+
+        string json = JsonUtility.ToJson(data);
+        
+        File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
+    }
+
+    public void SaveHighscore()
+    {
+        SaveData data = new SaveData();
+        data.highscore = highscore;
+
+        string json = JsonUtility.ToJson(data);
+        
+        File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
+    }
+
+    public void LoadHighscoreUsername()
+    {
+        string path = Application.persistentDataPath + "/savefile.json";
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            SaveData data = JsonUtility.FromJson<SaveData>(json);
+
+            highscoreUsername = data.highscoreUsername;
+        }
+    }
+
+    public void LoadHighscore()
+    {
+        string path = Application.persistentDataPath + "/savefile.json";
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            SaveData data = JsonUtility.FromJson<SaveData>(json);
+
+            highscore = data.highscore;
         }
     }
 }
